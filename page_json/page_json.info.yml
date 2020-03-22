@@ -1,0 +1,5 @@
+name: 'Page Json'
+type: module
+description: 'Provides node output as a json'
+core: 8.x
+package: 'Custom'

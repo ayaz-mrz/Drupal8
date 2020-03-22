@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Contains page_json.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+
+/**
+ * Implements hook_help().
+ */
+function page_json_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the page_json module.
+    case 'help.page.page_json':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides node output as a json') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_form_id_alter().
+ *
+ */
+function page_json_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['siteapikeydetails'] = array(
+    '#type' => 'details',
+    '#title' => 'Site API Key',
+  );
+
+  $siteapikey = \Drupal::config('page_json.apikey')->get('siteapikey');
+  $form['siteapikeydetails']['siteapikey'] = array(
+    '#title' => t('Site API Key'),
+    '#type' => 'textfield',
+    '#default_value' => !empty($siteapikey) ? $siteapikey : '',
+    '#attributes' => array('placeholder' => 'No API Key yet')
+  );
+
+  $form['#submit'][] = 'page_json_apikey_save';
+  $form['actions']['submit']['#value'] = t('Update Configuration');
+
+}
+
+/**
+ * Submit handler for system_site_information_settings() form.
+ *
+ */
+function page_json_apikey_save(&$form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
+  \Drupal::configFactory()->getEditable('page_json.apikey')->set('siteapikey', $values['siteapikey'])->save();
+  \Drupal::messenger()->addMessage(t('Site API Key has been saved with %siteapikey.', array('%siteapikey' => $values['siteapikey'])));
+}

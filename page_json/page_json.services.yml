@@ -1,0 +1,5 @@
+services:
+  page_json.apikeyconverter:
+    class: Drupal\page_json\Services\PageJsonApikeyConverter
+    tags:
+      - { name: paramconverter }

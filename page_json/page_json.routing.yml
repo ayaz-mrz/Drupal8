@@ -1,0 +1,14 @@
+
+page_json.page_json_controller_page_json_output:
+  path: '/page_json/{apikey}/{node}'
+  defaults:
+    _controller: '\Drupal\page_json\Controller\PageJsonController::page_json_output'
+    _title: 'json_output'
+  options:
+    parameters:
+      apikey:
+        type: apikey
+      node:
+        type: entity:node
+  requirements:
+    _permission: 'access content'
